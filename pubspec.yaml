@@ -1,6 +1,6 @@
 name: ssh
 description: SSH and SFTP client for Flutter. 
-version: 0.0.1
+version: 0.0.2
 author: Qian Sha
 homepage: https://github.com/shaqian/flutter_ssh
 

@@ -32,7 +32,8 @@ class SSHClient {
     @required this.host,
     @required this.port,
     @required this.username,
-    @required this.passwordOrKey, // password or {privateKey: value, [publicKey: value, passphrase: value]}
+    @required
+        this.passwordOrKey, // password or {privateKey: value, [publicKey: value, passphrase: value]}
   }) {
     var uuid = new Uuid();
     id = uuid.v4();

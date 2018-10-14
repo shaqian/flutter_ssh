@@ -105,6 +105,12 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
   Map<String, SSHClient> clientPool = new HashMap<>();
   private EventSink eventSink;
 
+  private SSHClient getClient(final String key, final Result result) {
+    SSHClient client = clientPool.get(key);
+    if (client == null)
+      result.error("unknown_client", "Unknown client", null);
+    return client;
+  }
 
   @Override
   public void onListen(Object arguments, EventSink events) {
@@ -170,9 +176,11 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
     new Thread(new Runnable() {
       public void run() {
         try {
-          SSHClient client = clientPool.get(args.get("id"));
-          Session session = client._session;
+          SSHClient client = getClient(args.get("id").toString(), result);
+          if (client == null)
+            return;
 
+          Session session = client._session;
           ChannelExec channel = (ChannelExec) session.openChannel("exec");
           channel.setCommand(args.get("cmd").toString());
           channel.connect();
@@ -198,9 +206,11 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
       public void run() {
         try {
           String key = args.get("id").toString();
-          SSHClient client = clientPool.get(key);
-          Session session = client._session;
+          SSHClient client = getClient(args.get("id").toString(), result);
+          if (client == null)
+            return;
 
+          Session session = client._session;
           Channel channel = session.openChannel("shell");
           ((ChannelShell)channel).setPtyType(args.get("ptyType").toString());
           channel.connect();
@@ -233,7 +243,10 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
     new Thread(new Runnable()  {
       public void run() {
         try {
-          SSHClient client = clientPool.get(args.get("id"));
+          SSHClient client = getClient(args.get("id").toString(), result);
+          if (client == null)
+            return;
+
           client._dataOutputStream.writeBytes(args.get("cmd").toString());
           client._dataOutputStream.flush();
           result.success("write_success");
@@ -250,6 +263,9 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
       public void run() {
         try {
           SSHClient client = clientPool.get(args.get("id"));
+          if (client == null)
+            return;
+
           if (client._channel != null) {
             client._channel.disconnect();
           }
@@ -274,7 +290,10 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
     new Thread(new Runnable()  {
       public void run() {
         try {
-          SSHClient client = clientPool.get(args.get("id"));
+          SSHClient client = getClient(args.get("id").toString(), result);
+          if (client == null)
+            return;
+
           ChannelSftp channelSftp = (ChannelSftp) client._session.openChannel("sftp");
           channelSftp.connect();
           client._sftpSession = channelSftp;
@@ -461,6 +480,8 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
     this.disconnectSFTP(args);
 
     SSHClient client = clientPool.get(args.get("id"));
+    if (client == null)
+      return;
     client._session.disconnect();
   }
 

@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
       result = await client.connect();
       if (result == "session_connected") result = await client.execute("ps");
     } on PlatformException catch (e) {
-      print('Error: $e.code\nError Message: $e.message');
+      print('Error: ${e.code}\nError Message: ${e.message}');
     }
 
     setState(() {
@@ -100,7 +100,7 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
         }
       }
     } on PlatformException catch (e) {
-      print('Error: $e.code\nError Message: $e.message');
+      print('Error: ${e.code}\nError Message: ${e.message}');
     }
   }
 
@@ -158,7 +158,7 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
         }
       }
     } on PlatformException catch (e) {
-      print('Error: $e.code\nError Message: $e.message');
+      print('Error: ${e.code}\nError Message: ${e.message}');
     }
   }
 
