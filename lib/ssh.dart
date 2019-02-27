@@ -60,20 +60,22 @@ class SSHClient {
   }
 
   Future<String> connect() async {
-    return await _channel.invokeMethod('connectToHost', {
+    var result = await _channel.invokeMethod('connectToHost', {
       "id": id,
       "host": host,
       "port": port,
       "username": username,
       "passwordOrKey": passwordOrKey,
     });
+    return result;
   }
 
   Future<String> execute(String cmd) async {
-    return await _channel.invokeMethod('execute', {
+    var result = await _channel.invokeMethod('execute', {
       "id": id,
       "cmd": cmd,
     });
+    return result;
   }
 
   Future<String> startShell({
@@ -81,69 +83,77 @@ class SSHClient {
     Callback callback,
   }) async {
     shellCallback = callback;
-    return await _channel.invokeMethod('startShell', {
+    var result = await _channel.invokeMethod('startShell', {
       "id": id,
       "ptyType": ptyType,
     });
+    return result;
   }
 
   Future<String> writeToShell(String cmd) async {
-    return await _channel.invokeMethod('writeToShell', {
+    var result = await _channel.invokeMethod('writeToShell', {
       "id": id,
       "cmd": cmd,
     });
+    return result;
   }
 
   Future closeShell() async {
     shellCallback = null;
-    return await _channel.invokeMethod('closeShell', {
+    await _channel.invokeMethod('closeShell', {
       "id": id,
     });
   }
 
   Future<String> connectSFTP() async {
-    return await _channel.invokeMethod('connectSFTP', {
+    var result = await _channel.invokeMethod('connectSFTP', {
       "id": id,
     });
+    return result;
   }
 
   Future<List> sftpLs([String path = '.']) async {
-    return await _channel.invokeMethod('sftpLs', {
+    var result = await _channel.invokeMethod('sftpLs', {
       "id": id,
       "path": path,
     });
+    return result;
   }
 
   Future<String> sftpRename({
     @required String oldPath,
     @required String newPath,
   }) async {
-    return await _channel.invokeMethod('sftpRename', {
+    var result = await _channel.invokeMethod('sftpRename', {
       "id": id,
       "oldPath": oldPath,
       "newPath": newPath,
     });
+    return result;
   }
 
   Future<String> sftpMkdir(String path) async {
-    return await _channel.invokeMethod('sftpMkdir', {
+    var result = await _channel.invokeMethod('sftpMkdir', {
       "id": id,
       "path": path,
     });
+    return result;
   }
 
   Future<String> sftpRm(String path) async {
-    return await _channel.invokeMethod('sftpRm', {
+    var result = await _channel.invokeMethod('sftpRm', {
       "id": id,
       "path": path,
     });
+    return result;
   }
 
   Future<String> sftpRmdir(String path) async {
-    return await _channel.invokeMethod('sftpRmdir', {
+    var result = await _channel.invokeMethod('sftpRmdir', {
       "id": id,
       "path": path,
     });
+    return result;
   }
 
   Future<String> sftpDownload({
@@ -152,11 +162,12 @@ class SSHClient {
     Callback callback,
   }) async {
     downloadCallback = callback;
-    return await _channel.invokeMethod('sftpDownload', {
+    var result = await _channel.invokeMethod('sftpDownload', {
       "id": id,
       "path": path,
       "toPath": toPath,
     });
+    return result;
   }
 
   Future sftpCancelDownload() async {
@@ -171,11 +182,12 @@ class SSHClient {
     Callback callback,
   }) async {
     uploadCallback = callback;
-    return await _channel.invokeMethod('sftpUpload', {
+    var result = await _channel.invokeMethod('sftpUpload', {
       "id": id,
       "path": path,
       "toPath": toPath,
     });
+    return result;
   }
 
   Future sftpCancelUpload() async {
