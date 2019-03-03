@@ -32,9 +32,25 @@ var client = new SSHClient(
     "privateKey": """-----BEGIN RSA PRIVATE KEY-----
     ......
 -----END RSA PRIVATE KEY-----""",
+    "passphrase": "passphrase-for-key",
   },
 );
 ```
+
+#### OpenSSH keys
+
+Recent versions of OpenSSH introduce a proprietary key format that is not supported by most other software, including this one, you must convert it to a PEM-format RSA key using the `puttygen` tool. On Windows this is a graphical tool. On the Mac, install it per [these instructions](https://www.ssh.com/ssh/putty/mac/). On Linux install your distribution's `putty` or `puttygen` packages.
+
+* Temporarily remove the passphrase from the original key (enter blank password as the new password)  
+`ssh-keygen -p -f id_rsa`
+* convert to RSA PEM format  
+`puttygen id_rsa -O private-openssh -o id_rsa_unencrypted`
+* re-apply the passphrase to the original key  
+`ssh-keygen -p -f id_rsa`
+* apply a passphrase to the converted key:  
+`puttygen id_rsa_unencrypted -P -O private-openssh -o id_rsa_flutter`
+* remove the unencrypted version:  
+`rm id_rsa_unencrypted`
 
 ### Connect client
 ```dart
