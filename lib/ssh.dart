@@ -204,12 +204,12 @@ class SSHClient {
     });
   }
 
-  Future disconnect() async {
+  disconnect() {
     shellCallback = null;
     uploadCallback = null;
     downloadCallback = null;
     stateSubscription.cancel();
-    await _channel.invokeMethod('disconnect', {
+    _channel.invokeMethod('disconnect', {
       "id": id,
     });
   }

@@ -28,6 +28,7 @@ class _MyAppState extends State<MyApp> {
     try {
       result = await client.connect();
       if (result == "session_connected") result = await client.execute("ps");
+      client.disconnect();
     } on PlatformException catch (e) {
       print('Error: ${e.code}\nError Message: ${e.message}');
     }
@@ -154,7 +155,7 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
 
           print(await client.disconnectSFTP());
 
-          print(await client.disconnect());
+          client.disconnect();
         }
       }
     } on PlatformException catch (e) {
