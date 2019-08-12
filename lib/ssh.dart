@@ -79,7 +79,7 @@ class SSHClient {
   }
   
   Future<String> portForwardL(int rport, int lport, String rhost) async {
-    var result = await _channel.invokeMethod('portforwardL', {
+    var result = await _channel.invokeMethod('portForwardL', {
       "id": id,
       "rhost": rhost,
       "rport": rport,
