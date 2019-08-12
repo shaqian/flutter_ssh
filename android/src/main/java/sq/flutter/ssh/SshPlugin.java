@@ -102,8 +102,8 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
       connectToHost((HashMap) call.arguments, result);
     } else if (call.method.equals("execute")) {
       execute((HashMap) call.arguments, result);
-    } else if (call.method.equals("portforwardL")) {
-      portforwardL((HashMap) call.arguments, result);
+    } else if (call.method.equals("portForwardL")) {
+      portForwardL((HashMap) call.arguments, result);
     } else if (call.method.equals("startShell")) {
       startShell((HashMap) call.arguments, result);
     } else if (call.method.equals("writeToShell")) {
@@ -251,7 +251,7 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
     }).start();
   }
   
-  private void portforwardL(final HashMap args, final Result result) {
+  private void portForwardL(final HashMap args, final Result result) {
     new Thread(new Runnable()  {
       public void run() {
         try {
