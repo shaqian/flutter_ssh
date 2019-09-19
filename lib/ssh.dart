@@ -223,4 +223,9 @@ class SSHClient {
       "id": id,
     });
   }
+  
+  bool isConnected() {
+    var result = _channel.invokeMethod('isConnected', {"id": id});
+    return result;
+  }
 }
