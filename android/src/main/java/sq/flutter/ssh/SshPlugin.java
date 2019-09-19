@@ -134,6 +134,8 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
       disconnectSFTP((HashMap) call.arguments);
     } else if (call.method.equals("disconnect")) {
       disconnect((HashMap) call.arguments);
+    } else if (call.method.equals("isConnected")) {
+      isConnected((HashMap) call.arguments, result);
     } else {
       result.notImplemented();
     }
@@ -556,6 +558,17 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
     if (client == null)
       return;
     client._session.disconnect();
+  }
+  
+  private bool isConnected(final HashMap args) {
+    SSHClient client = clientPool.get(args.get("id"));
+    if (client == null) {
+      return false;
+    } else if ( client._session == null || ! client._session.isConnected()) {
+        return false;
+    } else {
+      return true;
+    }   
   }
 
   private void sendEvent(Map<String, Object> event) {
