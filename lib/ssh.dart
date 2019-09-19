@@ -224,8 +224,8 @@ class SSHClient {
     });
   }
   
-  bool isConnected() {
-    var result = _channel.invokeMethod('isConnected', {"id": id});
+  Future<bool> isConnected() async {
+    var result = await _channel.invokeMethod('isConnected', {"id": id,});
     return result;
   }
 }
