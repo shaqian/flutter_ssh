@@ -224,8 +224,12 @@ class SSHClient {
     });
   }
   
-  Future<bool> isConnected() async {
-    var result = await _channel.invokeMethod('isConnected', {"id": id,});
-    return result;
+   Future<bool> isConnected() async {
+    bool connected = false; // default to false
+    var result =  await _channel.invokeMethod('isConnected', {"id": id,});
+    if (result == "true") { // results returns a string, therefor we need to check the string 'true'
+      connected = true;
+    }
+    return connected;
   }
 }
