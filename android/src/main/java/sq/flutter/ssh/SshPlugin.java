@@ -560,14 +560,14 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
     client._session.disconnect();
   }
   
-  private boolean isConnected(final HashMap args, final Result result) {
+  private void isConnected(final HashMap args, final Result result) {
     SSHClient client = clientPool.get(args.get("id"));
     if (client == null) {
-      return false;
+		result.success("false");
     } else if ( client._session == null || ! client._session.isConnected()) {
-        return false;
+		result.success("false");
     } else {
-      return true;
+      result.success("true");
     }   
   }
 
