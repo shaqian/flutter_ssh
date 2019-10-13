@@ -1,3 +1,7 @@
+## 0.0.5
+
+* Fixed download exception on Android due to [this issue](https://github.com/flutter/flutter/issues/34993).
+
 ## 0.0.4
 
 * Changed disconnect() method to sync. 

@@ -95,6 +95,46 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
     }
   }
 
+  private static class MainThreadEventSink implements EventChannel.EventSink {
+    private EventChannel.EventSink eventSink;
+    private Handler handler;
+
+    MainThreadEventSink(EventChannel.EventSink eventSink) {
+      this.eventSink = eventSink;
+      handler = new Handler(Looper.getMainLooper());
+    }
+
+    @Override
+    public void success(final Object o) {
+      handler.post(new Runnable() {
+        @Override
+        public void run() {
+          eventSink.success(o);
+        }
+      });
+    }
+
+    @Override
+    public void error(final String s, final String s1, final Object o) {
+      handler.post(new Runnable() {
+        @Override
+        public void run() {
+          eventSink.error(s, s1, o);
+        }
+      });
+    }
+
+    @Override
+    public void endOfStream() {
+      handler.post(new Runnable() {
+        @Override
+        public void run() {
+          eventSink.endOfStream();
+        }
+      });
+    }
+  }
+
   @Override
   public void onMethodCall(MethodCall call, Result rawResult) {
     Result result = new MethodResultWrapper(rawResult);
@@ -164,7 +204,7 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
 
   @Override
   public void onListen(Object arguments, EventSink events) {
-    this.eventSink = events;
+    this.eventSink = new MainThreadEventSink(events);
   }
 
   @Override
