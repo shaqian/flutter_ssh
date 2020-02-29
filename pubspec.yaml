@@ -1,17 +1,18 @@
 name: ssh
 description: SSH and SFTP client for Flutter. Wraps iOS library NMSSH and Android library JSch.
-version: 0.0.5
-author: Qian Sha
+version: 0.0.6
 homepage: https://github.com/shaqian/flutter_ssh
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  flutter: ">=1.10.0 <2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  
-  uuid: ^1.0.3
+
+  meta: ^1.1.8
+  uuid: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -19,8 +20,12 @@ dependencies:
 # The following section is specific to Flutter.
 flutter:
   plugin:
-    androidPackage: sq.flutter.ssh
-    pluginClass: SshPlugin
+    platforms:
+      android:
+        package: sq.flutter.ssh
+        pluginClass: SshPlugin
+      ios:
+        pluginClass: SshPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

@@ -1,3 +1,8 @@
+## 0.0.6
+
+* Set compileSdkVersion to 28, fixing build error "Execution failed for task ':ssh:verifyReleaseResources'"
+* Set uuid plugin version to ^2.0.0.
+
 ## 0.0.5
 
 * Fixed download exception on Android due to [this issue](https://github.com/flutter/flutter/issues/34993).
