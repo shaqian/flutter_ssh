@@ -6,6 +6,22 @@ SSH and SFTP client for Flutter. Wraps iOS library [NMSSH](https://github.com/NM
 
 Add `ssh` as a [dependency in your pubspec.yaml file](https://flutter.io/using-packages/).
 
+## Known issue
+
+- Platform exception in release mode for Android:
+
+  ```
+  PlatformException(connection_failure, java.lang.ClassNotFoundException: com.jcraft.jsch.jce.Random, null)
+  ```
+
+  There are 2 workarounds:
+  
+  - Disable shrink:
+
+    `flutter build apk --no-shrink`
+  
+  - Configure proguard-rules. Refer to [this comment](https://github.com/shaqian/flutter_ssh/issues/27#issuecomment-599180850) for details. 
+
 ## Usage
 
 ### Create a client using password authentication
