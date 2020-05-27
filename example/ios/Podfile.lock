@@ -3,7 +3,7 @@ PODS:
   - NMSSH (2.3.1)
   - path_provider (0.0.1):
     - Flutter
-  - ssh (0.0.6):
+  - ssh (0.0.7):
     - Flutter
     - NMSSH
 
