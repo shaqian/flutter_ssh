@@ -272,11 +272,13 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
 
           Session session = client._session;
           ChannelExec channel = (ChannelExec) session.openChannel("exec");
+
+          InputStream in = channel.getInputStream();
+
           channel.setCommand(args.get("cmd").toString());
           channel.connect();
 
           String line, response = "";
-          InputStream in = channel.getInputStream();
           BufferedReader reader = new BufferedReader(new InputStreamReader(in));
           while ((line = reader.readLine()) != null) {
             response += line + "\r\n";
@@ -325,10 +327,12 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
 
           Session session = client._session;
           Channel channel = session.openChannel("shell");
+
+          InputStream in = channel.getInputStream();
+
           ((ChannelShell)channel).setPtyType(args.get("ptyType").toString());
           channel.connect();
 
-          InputStream in = channel.getInputStream();
           client._channel = channel;
           client._bufferedReader = new BufferedReader(new InputStreamReader(in));
           client._dataOutputStream = new DataOutputStream(channel.getOutputStream());
