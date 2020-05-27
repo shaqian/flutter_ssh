@@ -1,6 +1,7 @@
 ## 0.0.7
 
-* Moved getInputStream before channel connect on Android. 
+* Moved getInputStream before channel connect on Android.
+* Set minimum SDK version to 2.1.0. 
 
 ## 0.0.6
 
