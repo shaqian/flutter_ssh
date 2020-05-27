@@ -1,6 +1,6 @@
 name: ssh
 description: SSH and SFTP client for Flutter. Wraps iOS library NMSSH and Android library JSch.
-version: 0.0.6
+version: 0.0.7
 homepage: https://github.com/shaqian/flutter_ssh
 
 environment:
