@@ -1,6 +1,6 @@
 # ssh
 
-SSH and SFTP client for Flutter. Wraps iOS library [NMSSH](https://github.com/NMSSH/NMSSH) and Android library [JSch](http://www.jcraft.com/jsch/).
+SSH and SFTP client for Flutter ,An Amazing concept in flutter. Wraps iOS library [NMSSH](https://github.com/NMSSH/NMSSH) and Android library [JSch](http://www.jcraft.com/jsch/).
 
 ## Installation
 
