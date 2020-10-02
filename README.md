@@ -32,7 +32,7 @@ var client = new SSHClient(
   host: "my.sshtest",
   port: 22,
   username: "sha",
-  passwordOrKey: "Password01.",
+  passwordOrKey: "Password01",
 );
 ```
 
