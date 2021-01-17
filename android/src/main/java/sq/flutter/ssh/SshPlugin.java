@@ -144,6 +144,8 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
       execute((HashMap) call.arguments, result);
     } else if (call.method.equals("portForwardL")) {
       portForwardL((HashMap) call.arguments, result);
+    } else if (call.method.equals("portForwardL")) {
+      portForwardR((HashMap) call.arguments, result);
     } else if (call.method.equals("startShell")) {
       startShell((HashMap) call.arguments, result);
     } else if (call.method.equals("writeToShell")) {
@@ -308,6 +310,29 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
           int lport = Integer.parseInt(args.get("lport").toString());
           String rhost = args.get("rhost").toString();
           int assinged_port=session.setPortForwardingL(lport, rhost, rport);
+          
+          result.success(Integer.toString(assinged_port));
+        } catch (JSchException error) {
+          Log.e(LOGTAG, "Error connecting portforwardL:" + error.getMessage());
+          result.error("portforwardL_failure", error.getMessage(), null);
+        }
+      }
+    }).start();
+  }
+
+  private void portForwardR(final HashMap args, final Result result) {
+    new Thread(new Runnable()  {
+      public void run() {
+        try {
+          SSHClient client = getClient(args.get("id").toString(), result);
+          if (client == null)
+            return;
+          
+          Session session = client._session;
+          int rport = Integer.parseInt(args.get("rport").toString());
+          int lport = Integer.parseInt(args.get("lport").toString());
+          String rhost = args.get("rhost").toString();
+          int assinged_port=session.setPortForwardingR(rport, rhost, lport);
           
           result.success(Integer.toString(assinged_port));
         } catch (JSchException error) {
