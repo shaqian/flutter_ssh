@@ -88,6 +88,16 @@ class SSHClient {
     return result;
   }
 
+  Future<String> portForwardR(int rport, int lport, String rhost) async {
+    var result = await _channel.invokeMethod('portForwardR', {
+      "id": id,
+      "rhost": rhost,
+      "rport": rport,
+      "lport": lport
+    });
+    return result;
+  }
+
   Future<String> startShell({
     String ptyType = "vanilla", // vanilla, vt100, vt102, vt220, ansi, xterm
     Callback callback,
