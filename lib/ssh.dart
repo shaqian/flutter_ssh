@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:ssh/model.dart';
 import 'package:uuid/uuid.dart';
 
 const MethodChannel _channel = MethodChannel('ssh');
@@ -117,13 +118,22 @@ class SSHClient {
     return result;
   }
 
-  Future<List<dynamic>?> sftpLs([String path = '.']) async {
-    final result = await _channel.invokeMethod<List<dynamic>>('sftpLs', {
+  Future<List<SFTPLsData>?> sftpLs([String path = '.']) async {
+    final rawResult = await _channel.invokeMethod<List<dynamic>>('sftpLs', {
       "id": id,
       "path": path,
     });
 
-    return result;
+    if (rawResult == null) return null;
+
+    // convert from Map<dynamic, dynamic> to Map<String, dynamic>
+    return rawResult
+        .map((dynamic r) {
+          return (r as Map<dynamic, dynamic>)
+              .map<String, dynamic>((dynamic key, dynamic value) => MapEntry<String, dynamic>(key.toString(), value));
+        })
+        .map((e) => SFTPLsData.fromJson(e))
+        .toList();
   }
 
   Future<String?> sftpRename({required String oldPath, required String newPath}) async {
