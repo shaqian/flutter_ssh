@@ -21,7 +21,7 @@ class SSHClient {
         downloadCallback = null,
         stateSubscription = null {
     stateSubscription = onStateChanged?.listen((dynamic result) {
-      _parseOutput(result as Map<String, dynamic>);
+      _parseOutput(result);
     });
   }
 
@@ -35,7 +35,7 @@ class SSHClient {
   Callback? uploadCallback;
   Callback? downloadCallback;
 
-  void _parseOutput(Map<String, dynamic> result) {
+  void _parseOutput(dynamic result) {
     switch (result["name"]) {
       case "Shell":
         if (shellCallback != null && result["key"] == id) shellCallback!(result["value"]);
@@ -117,8 +117,8 @@ class SSHClient {
     return result;
   }
 
-  Future<List<Map<String, dynamic>>?> sftpLs([String path = '.']) async {
-    final result = await _channel.invokeMethod<List<Map<String, dynamic>>>('sftpLs', {
+  Future<List<dynamic>?> sftpLs([String path = '.']) async {
+    final result = await _channel.invokeMethod<List<dynamic>>('sftpLs', {
       "id": id,
       "path": path,
     });

@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _result = '';
-  List<Map<String, dynamic>>? _array;
+  List<dynamic>? _array;
 
   Future<void> onClickCmd() async {
     final client = SSHClient(
@@ -217,7 +217,7 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
             Text(_result),
             if (_array != null && _array!.isNotEmpty)
               Column(
-                children: _array!.map((Map<String, dynamic> f) {
+                children: _array!.map((dynamic f) {
                   return Text(
                       "${f["filename"]} ${f["isDirectory"]} ${f["modificationDate"]} ${f["lastAccess"]} ${f["fileSize"]} ${f["ownerUserID"]} ${f["ownerGroupID"]} ${f["permissions"]} ${f["flags"]}");
                 }).toList(),
