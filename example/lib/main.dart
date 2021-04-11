@@ -2,50 +2,53 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:ssh/ssh.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:ssh/ssh.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => new _MyAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
   String _result = '';
-  List _array;
+  List<Map<String, dynamic>>? _array;
 
   Future<void> onClickCmd() async {
-    var client = new SSHClient(
+    final client = SSHClient(
       host: "my.sshtest",
       port: 22,
       username: "sha",
       passwordOrKey: "Password01.",
     );
 
-    String result;
+    String? result;
     try {
       result = await client.connect();
-      if (result == "session_connected") result = await client.execute("ps");
+      if (result == "session_connected") {
+        result = await client.execute("ps");
+      }
       client.disconnect();
     } on PlatformException catch (e) {
       print('Error: ${e.code}\nError Message: ${e.message}');
     }
 
     setState(() {
-      _result = result;
+      _result = result ?? '';
       _array = null;
     });
   }
 
   Future<void> onClickShell() async {
-    var client = new SSHClient(
+    final client = SSHClient(
       host: "my.sshtest",
       port: 22,
       username: "sha",
       passwordOrKey: {
-        "privateKey": """-----BEGIN RSA PRIVATE KEY-----
+        "privateKey": """
+-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA2DdFSeWG8wOHddRpOhf4FRqksJITr59iXdNrXq+n79QFN1g4
 bvRG9zCDmyLb8EF+gah78dpJsGZVIltmfYWpsk7ok9GT/foCB1d2E6DbEU6mBIPe
 OLxYOqyiea8mi7iGt9BvAB4Mj+v2LnhK4O2BB6PTU4KLjSgMdqtV/EGctLdK+JEU
@@ -71,7 +74,8 @@ VYm6XcNwPF/t5SM01ZuxH9NE2HZJ1cHcUGYQcUUJuqSkzsVK9j32E/akW9Cg3LVD
 D/fESTECgYBwWv9yveto6pP6/xbR9k/Jdgr+vXQ3BJVU3BOsD38SeSrZfMSNGqgx
 eiukCOIsRHYY7Qqi2vCJ62mwbHJ3RhSKKxcGpgzGX7KoGZS+bb5wb7RGNYK/mVaI
 pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
------END RSA PRIVATE KEY-----""",
+-----END RSA PRIVATE KEY-----
+""",
       },
     );
 
@@ -81,22 +85,23 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
     });
 
     try {
-      String result = await client.connect();
+      String? result = await client.connect();
       if (result == "session_connected") {
         result = await client.startShell(
             ptyType: "xterm",
             callback: (dynamic res) {
               setState(() {
-                _result += res;
+                _result += res as String;
               });
             });
 
         if (result == "shell_started") {
           print(await client.writeToShell("echo hello > world\n"));
           print(await client.writeToShell("cat world\n"));
-          new Future.delayed(
+
+          Future<dynamic>.delayed(
             const Duration(seconds: 5),
-            () async => await client.closeShell(),
+            client.closeShell,
           );
         }
       }
@@ -106,7 +111,7 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
   }
 
   Future<void> onClickSFTP() async {
-    var client = new SSHClient(
+    final client = SSHClient(
       host: "my.sshtest",
       port: 22,
       username: "sha",
@@ -114,13 +119,13 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
     );
 
     try {
-      String result = await client.connect();
+      String? result = await client.connect();
       if (result == "session_connected") {
         result = await client.connectSFTP();
         if (result == "sftp_connected") {
-          var array = await client.sftpLs();
+          final array = await client.sftpLs();
           setState(() {
-            _result = result;
+            _result = result!;
             _array = array;
           });
 
@@ -131,12 +136,12 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
           ));
           print(await client.sftpRmdir("testsftprename"));
 
-          Directory tempDir = await getTemporaryDirectory();
-          String tempPath = tempDir.path;
-          var filePath = await client.sftpDownload(
+          final Directory tempDir = await getTemporaryDirectory();
+          final String tempPath = tempDir.path;
+          final filePath = await client.sftpDownload(
             path: "testupload",
             toPath: tempPath,
-            callback: (progress) async {
+            callback: (dynamic progress) async {
               print(progress);
               // if (progress == 20) await client.sftpCancelDownload();
             },
@@ -144,14 +149,16 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
 
           print(await client.sftpRm("testupload"));
 
-          print(await client.sftpUpload(
-            path: filePath,
-            toPath: ".",
-            callback: (progress) async {
-              print(progress);
-              // if (progress == 30) await client.sftpCancelUpload();
-            },
-          ));
+          if (filePath != null) {
+            print(await client.sftpUpload(
+              path: filePath,
+              toPath: ".",
+              callback: (dynamic progress) async {
+                print(progress);
+                // if (progress == 30) await client.sftpCancelUpload();
+              },
+            ));
+          }
 
           print(await client.disconnectSFTP());
 
@@ -167,32 +174,29 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
   Widget build(BuildContext context) {
     Widget renderButtons() {
       return ButtonTheme(
-        padding: EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(5.0),
         child: ButtonBar(
           children: <Widget>[
-            FlatButton(
-              child: Text(
+            TextButton(
+              onPressed: onClickCmd,
+              child: const Text(
                 'Test command',
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: onClickCmd,
-              color: Colors.blue,
             ),
-            FlatButton(
-              child: Text(
+            TextButton(
+              onPressed: onClickShell,
+              child: const Text(
                 'Test shell',
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: onClickShell,
-              color: Colors.blue,
             ),
-            FlatButton(
-              child: Text(
+            TextButton(
+              onPressed: onClickSFTP,
+              child: const Text(
                 'Test SFTP',
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: onClickSFTP,
-              color: Colors.blue,
             ),
           ],
         ),
@@ -206,20 +210,18 @@ pFkz72+8eA2cnbWUqHt9WqMUgUBYZTMESzQrTf7+q+0gWf49AZJ/QQ==
         ),
         body: ListView(
           shrinkWrap: true,
-          padding: EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(15.0),
           children: <Widget>[
-            Text(
-                "Please edit the connection setting in the source code before clicking the test buttons"),
+            const Text("Please edit the connection setting in the source code before clicking the test buttons"),
             renderButtons(),
             Text(_result),
-            _array != null && _array.length > 0
-                ? Column(
-                    children: _array.map((f) {
-                      return Text(
-                          "${f["filename"]} ${f["isDirectory"]} ${f["modificationDate"]} ${f["lastAccess"]} ${f["fileSize"]} ${f["ownerUserID"]} ${f["ownerGroupID"]} ${f["permissions"]} ${f["flags"]}");
-                    }).toList(),
-                  )
-                : Container(),
+            if (_array != null && _array!.isNotEmpty)
+              Column(
+                children: _array!.map((Map<String, dynamic> f) {
+                  return Text(
+                      "${f["filename"]} ${f["isDirectory"]} ${f["modificationDate"]} ${f["lastAccess"]} ${f["fileSize"]} ${f["ownerUserID"]} ${f["ownerGroupID"]} ${f["permissions"]} ${f["flags"]}");
+                }).toList(),
+              ),
           ],
         ),
       ),
