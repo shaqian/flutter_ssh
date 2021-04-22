@@ -1,0 +1,16 @@
+include: package:lint/analysis_options.yaml
+
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  exclude:
+    - "**/*.g.dart"
+    - lib/localizations.g.dart
+
+linter:
+  rules:
+    camel_case_types: true
+    avoid_print: true
+    sort_constructors_first: true
+    avoid_classes_with_only_static_members: false

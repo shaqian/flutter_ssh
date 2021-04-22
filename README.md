@@ -1,3 +1,5 @@
+[![style: lint](https://img.shields.io/badge/style-lint-4BC0F5.svg)](https://pub.dev/packages/lint)
+
 # ssh
 
 SSH and SFTP client for Flutter. Wraps iOS library [NMSSH](https://github.com/NMSSH/NMSSH) and Android library [JSch](http://www.jcraft.com/jsch/).
@@ -5,6 +7,14 @@ SSH and SFTP client for Flutter. Wraps iOS library [NMSSH](https://github.com/NM
 ## Installation
 
 Add `ssh` as a [dependency in your pubspec.yaml file](https://flutter.io/using-packages/).
+
+## Contribute
+
+### Generate DTO
+
+```
+fvm flutter pub run build_runner build
+```
 
 ## Known issue
 
@@ -109,6 +119,9 @@ await client.closeShell();
 ### SFTP
 
 #### Connect SFTP:
+
+Make sure to call connect method before connectSFTP
+
 ```dart
 await client.connectSFTP();
 ```
